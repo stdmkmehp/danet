@@ -8,3 +8,11 @@ docs/src/
 docs/html/
 encoding/_ext/
 encoding.egg-info/
+torch_encoding.egg-info/
+encoding/lib/*pu/*.o
+encoding/lib/*pu/*.so
+encoding/lib/*pu/*ninja*
+encoding/lib/*pu/*.egg-info/
+encoding/lib/*pu/dist/
+experiments/segmentation/outdir/
+.vscode/

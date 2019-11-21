@@ -1,4 +1,6 @@
 #include <ATen/ATen.h>
+#include "ATen/cuda/CUDAContext.h"
+#include <torch/serialize/tensor.h>
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -366,7 +368,7 @@ at::Tensor ROIAlignForwardCUDA(
   auto width = input.size(3);
 
   // Output Tensor is (num_rois, C, pooled_height, pooled_width)
-  auto output = input.type().tensor({proposals, channels, pooled_height, pooled_width});
+  auto output = torch::zeros({proposals, channels, pooled_height, pooled_width}, input.options()); //input.type().tensor({proposals, channels, pooled_height, pooled_width});
 
   auto count = output.numel();
   
@@ -375,7 +377,7 @@ at::Tensor ROIAlignForwardCUDA(
       <<<ROI_GET_BLOCKS(count),
          ROI_CUDA_NUM_THREADS,
          0,
-         at::globalContext().getCurrentCUDAStream()>>>(
+         at::cuda::getCurrentCUDAStream()>>>(
           count,
           input.data<scalar_t>(),
           static_cast<scalar_t>(spatial_scale),
@@ -413,7 +415,7 @@ at::Tensor ROIAlignBackwardCUDA(
 
   // Output Tensor is (num_rois, C, pooled_height, pooled_width)
   // gradient wrt input features
-  auto grad_in = rois.type().tensor({b_size, channels, height, width}).zero_(); 
+  auto grad_in = torch::zeros({b_size, channels, height, width}, rois.options()); //rois.type().tensor({b_size, channels, height, width}).zero_(); 
   auto num_rois = rois.size(0);
   auto count = grad_output.numel();
 
@@ -422,7 +424,7 @@ at::Tensor ROIAlignBackwardCUDA(
       <<<ROI_GET_BLOCKS(count),
          ROI_CUDA_NUM_THREADS,
          0,
-         at::globalContext().getCurrentCUDAStream()>>>(
+         at::cuda::getCurrentCUDAStream()>>>(
           count,
           grad_output.data<scalar_t>(),
           num_rois,

@@ -1,4 +1,6 @@
 #include <ATen/ATen.h>
+#include "ATen/cuda/CUDAContext.h"
+#include <torch/serialize/tensor.h>
 #include <vector>
 
 #include "common.h"
@@ -311,8 +313,8 @@ at::Tensor Aggregate_Forward_CUDA(
     const at::Tensor X_,
     const at::Tensor C_) {
   /* Device tensors */
-  auto E_ = A_.type().tensor({A_.size(0), C_.size(0), C_.size(1)}).zero_(); 
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  auto E_ = torch::zeros({A_.size(0), C_.size(0), C_.size(1)}, A_.options());
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   // B, K, D
   dim3 blocks(C_.size(1), C_.size(0), X_.size(0));
   dim3 threads(getNumThreads(X_.size(1)));
@@ -338,7 +340,7 @@ std::vector<at::Tensor> Aggregate_Backward_CUDA(
   auto gradA_ = at::zeros_like(A_);
   auto gradX_ = at::bmm(A_, GE_);
   auto gradC_ = (-GE_ * A_.sum(1).unsqueeze(2)).sum(0);
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   // B, K, D
   dim3 blocks(C_.size(0), X_.size(1), X_.size(0));
   dim3 threads(getNumThreads(C_.size(1)));
@@ -360,8 +362,8 @@ at::Tensor ScaledL2_Forward_CUDA(
     const at::Tensor X_,
     const at::Tensor C_,
     const at::Tensor S_) {
-  auto SL_ = X_.type().tensor({X_.size(0), X_.size(1), C_.size(0)}).zero_();
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  auto SL_ = torch::zeros({X_.size(0), X_.size(1), C_.size(0)}, X_.options()); //auto SL_ = X_.type().tensor({X_.size(0), X_.size(1), C_.size(0)}).zero_();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks(C_.size(0), X_.size(1), X_.size(0));
   dim3 threads(getNumThreads(C_.size(1)));
 
@@ -388,7 +390,7 @@ std::vector<at::Tensor> ScaledL2_Backward_CUDA(
   auto GX_ = at::zeros_like(X_);
   auto GC_ = at::zeros_like(C_);
   /* kernel function */
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks1(X_.size(2), X_.size(1), X_.size(0));
   dim3 threads1(getNumThreads(C_.size(0)));
   dim3 blocks2(C_.size(1), C_.size(0));

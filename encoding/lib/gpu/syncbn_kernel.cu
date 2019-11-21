@@ -1,4 +1,6 @@
 #include <ATen/ATen.h>
+#include "ATen/cuda/CUDAContext.h"
+#include <torch/serialize/tensor.h>
 #include <vector>
 
 #include "common.h"
@@ -180,7 +182,7 @@ at::Tensor BatchNorm_Forward_CUDA(
     const at::Tensor gamma_,
     const at::Tensor beta_) {
   auto output_ = at::zeros_like(input_);
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks(input_.size(1));
   dim3 threads(getNumThreads(input_.size(2)));
   AT_DISPATCH_FLOATING_TYPES(input_.type(), "BatchNorm_Forward_CUDA", ([&] {
@@ -214,7 +216,7 @@ std::vector<at::Tensor> BatchNorm_Backward_CUDA(
   at::Tensor gradMean_ = at::zeros_like(mean_);
   at::Tensor gradStd_ = at::zeros_like(std_);
   /* cuda utils*/
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks(input_.size(1));
   dim3 threads(getNumThreads(input_.size(2)));
   AT_DISPATCH_FLOATING_TYPES(input_.type(), "BatchNorm_Backward_CUDA", ([&] {
@@ -243,10 +245,10 @@ std::vector<at::Tensor> BatchNorm_Backward_CUDA(
 std::vector<at::Tensor> Sum_Square_Forward_CUDA(
     const at::Tensor input_) {
   /* outputs */
-  at::Tensor sum_ = input_.type().tensor({input_.size(1)}).zero_();
-  at::Tensor square_ = input_.type().tensor({input_.size(1)}).zero_();
+  at::Tensor sum_ = torch::zeros({input_.size(1)}, input_.options()); //input_.type().tensor({input_.size(1)}).zero_();
+  at::Tensor square_ = torch::zeros({input_.size(1)}, input_.options()); //input_.type().tensor({input_.size(1)}).zero_();
   /* cuda utils*/
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks(input_.size(1));
   dim3 threads(getNumThreads(input_.size(2)));
   AT_DISPATCH_FLOATING_TYPES(input_.type(), "BatchNorm_Backward_CUDA", ([&] {
@@ -269,7 +271,7 @@ at::Tensor Sum_Square_Backward_CUDA(
   /* outputs */
   at::Tensor gradInput_ = at::zeros_like(input_);
   /* cuda utils*/
-  cudaStream_t stream = at::globalContext().getCurrentCUDAStream();
+  cudaStream_t stream = at::cuda::getCurrentCUDAStream();
   dim3 blocks(input_.size(1));
   dim3 threads(getNumThreads(input_.size(2)));
   AT_DISPATCH_FLOATING_TYPES(input_.type(), "BatchNorm_Backward_CUDA", ([&] {
