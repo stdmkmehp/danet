@@ -4,6 +4,7 @@ from .pascal_voc import VOCSegmentation
 from .pascal_aug import VOCAugSegmentation
 from .pcontext import ContextSegmentation
 from .cityscapes import CityscapesSegmentation
+from .oxford import OxfordSegmentation
 
 datasets = {
     'ade20k': ADE20KSegmentation,
@@ -11,6 +12,7 @@ datasets = {
     'pascal_aug': VOCAugSegmentation,
     'pcontext': ContextSegmentation,
     'cityscapes': CityscapesSegmentation,
+    'oxford': OxfordSegmentation,
 }
 
 def get_segmentation_dataset(name, **kwargs):
