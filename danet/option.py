@@ -101,6 +101,29 @@ class Options():
                             help="multi grid dilation list")
         parser.add_argument('--scale', action='store_false', default=True,
                            help='choose to use random scale transform(0.75-2),default:multi scale')
+
+        # loop closure detection option
+        parser.add_argument('--lcd_model', type=str, default='inception_v1',
+                            help='Model name: [overfeat, inception_v{1,2,3,4}, nasnet, resnet_v2_152]')
+        parser.add_argument('--lcd_dataset', type=str,
+                            help='Either "city" or "college".', default='city')
+        parser.add_argument('--overfeat', type=int,
+                            help='0 for small network, 1 for large', default=0)
+        parser.add_argument('--weights_dir', type=str, default='OverFeat/data/default',
+                            help='Weights directory.')
+        parser.add_argument('--weights_base', type=str, default='net_weight_{}',
+                            help='Basename of weights file.')
+        parser.add_argument('--layer', type=int, default=None,
+                            help='Layer number to extract features from.')
+        parser.add_argument('--plot_gt', action='store_true',
+                            help='Plots heat-map of ground truth and exits')
+        parser.add_argument('--cluster', action='store_true',
+                            help='Additionally performs clustering on sim matrix.')
+        parser.add_argument('--sweep_median', action='store_true',
+                            help='Sweep median filter size values.')
+        parser.add_argument('--debug', action='store_true',
+                            help='Use small number of images to debug code')
+
         # the parser
         self.parser = parser
 
