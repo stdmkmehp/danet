@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/danet",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0,1"
+            },
+            "args": [
+                "--dataset","cityscapes",
+                "--model","danet",
+                "--resume-dir","cityscapes/model",
+                "--base-size","2048",
+                "--crop-size","768",
+                "--workers","0",
+                "--backbone","resnet101",
+                "--multi-grid",
+                "--multi-dilation","4","8","16",
+                // "--eval"
+                "--lcd",
+                "--lcd_model","inception_v1",
+                "--lcd_dataset","city",
+                "--overfeat","0"
+            ]
+        }
+    ]
+}

@@ -359,6 +359,9 @@ def compute_and_plot_scores(sim, gt, model_name):
 
 
 def lcd_eval(args):
+    print("\nMake sure that the following is set up properly: \
+            \n\tCKPT_DIR in cnn_models.py \
+            \n\tDATA_DIR CITY_IMG_PATH COLLEGE_IMG_PATH in dataset.py.\n")
     model_name = args.lcd_model
 
     # Check specified model

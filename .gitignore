@@ -15,7 +15,8 @@ encoding/lib/*pu/*ninja*
 encoding/lib/*pu/*.egg-info/
 encoding/lib/*pu/dist/
 experiments/segmentation/outdir/
-.vscode/
+#.vscode/
+danet/danet_vis*/
 danet/cityscapes/danet_vis/
 danet/cityscapes/model/*
 danet/pretrain_models/

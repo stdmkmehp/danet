@@ -10,7 +10,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.functional import upsample
+from torch.nn.functional import interpolate
 from torch.nn.parallel.data_parallel import DataParallel
 from torch.nn.parallel.parallel_apply import parallel_apply
 from torch.nn.parallel.scatter_gather import scatter
@@ -188,7 +188,7 @@ def module_inference(module, image, flip=True):
     return output.exp()
 
 def resize_image(img, h, w, **up_kwargs):
-    return F.upsample(img, (h, w), **up_kwargs)
+    return F.interpolate(img, (h, w), **up_kwargs)
 
 def pad_image(img, mean, std, crop_size):
     b,c,h,w = img.size()

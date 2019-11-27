@@ -19,6 +19,8 @@ from encoding.parallel import DataParallelModel, DataParallelCriterion
 from encoding.datasets import get_segmentation_dataset, test_batchify_fn
 from encoding.models import get_model, get_segmentation_model, MultiEvalModule
 
+from lcd import lcdutils
+
 from option import Options
 torch_ver = torch.__version__[:3]
 if torch_ver == '0.3':
@@ -26,7 +28,7 @@ if torch_ver == '0.3':
 
 def test(args):
     # output folder
-    outdir = '%s/danet_vis'%(args.dataset)
+    outdir = args.outdir
     if not os.path.exists(outdir):
         os.makedirs(outdir)
     # data transforms
@@ -34,7 +36,10 @@ def test(args):
         transform.ToTensor(),
         transform.Normalize([.485, .456, .406], [.229, .224, .225])])
     # dataset
-    if args.eval:
+    if args.lcd:
+        testset = get_segmentation_dataset('oxford', split=args.lcd_dataset, mode='vis',
+                                           transform=input_transform)
+    elif args.eval:
         testset = get_segmentation_dataset(args.dataset, split='val', mode='testval',
                                            transform=input_transform)
     else:#set split='test' for test set
@@ -93,6 +98,10 @@ def test(args):
                 mask = utils.get_mask_pallete(predict, args.dataset)
                 outname = os.path.splitext(impath)[0] + '.png'
                 mask.save(os.path.join(outdir, outname))
+                if args.lcd:
+                    imgMerge, imgGray = lcdutils.get_mask_pure(predict, os.path.join(testset.img_folder, impath), 'cityscapes')
+                    imgMerge.save(os.path.join('/home/lab404/zw/datasets/segmentation/working/merge', outname))
+                    imgGray.save(os.path.join('/home/lab404/zw/datasets/segmentation/working/gray', outname))
             # dummy outputs for compatible with eval mode
             return 0, 0, 0, 0
 

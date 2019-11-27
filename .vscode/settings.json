@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/home/lab404/anaconda3/envs/danet/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": false
+}

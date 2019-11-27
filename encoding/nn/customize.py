@@ -200,10 +200,10 @@ class PyramidPooling(Module):
 
     def forward(self, x):
         _, _, h, w = x.size()
-        feat1 = F.upsample(self.conv1(self.pool1(x)), (h, w), **self._up_kwargs)
-        feat2 = F.upsample(self.conv2(self.pool2(x)), (h, w), **self._up_kwargs)
-        feat3 = F.upsample(self.conv3(self.pool3(x)), (h, w), **self._up_kwargs)
-        feat4 = F.upsample(self.conv4(self.pool4(x)), (h, w), **self._up_kwargs)
+        feat1 = F.interpolate(self.conv1(self.pool1(x)), (h, w), **self._up_kwargs)
+        feat2 = F.interpolate(self.conv2(self.pool2(x)), (h, w), **self._up_kwargs)
+        feat3 = F.interpolate(self.conv3(self.pool3(x)), (h, w), **self._up_kwargs)
+        feat4 = F.interpolate(self.conv4(self.pool4(x)), (h, w), **self._up_kwargs)
         return torch.cat((x, feat1, feat2, feat3, feat4), 1)
 
 

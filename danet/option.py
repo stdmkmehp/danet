@@ -12,6 +12,8 @@ class Options():
     def __init__(self):
         parser = argparse.ArgumentParser(description='PyTorch \
             Segmentation')
+        parser.add_argument('--outdir', type=str, default='danet_vis',
+                            help='outdir to save images')
         # model and dataset 
         parser.add_argument('--model', type=str, default='encnet',
                             help='model name (default: encnet)')
@@ -103,6 +105,8 @@ class Options():
                            help='choose to use random scale transform(0.75-2),default:multi scale')
 
         # loop closure detection option
+        parser.add_argument('--lcd', action='store_true',
+                            help='Activate loop closure detection function.')
         parser.add_argument('--lcd_model', type=str, default='inception_v1',
                             help='Model name: [overfeat, inception_v{1,2,3,4}, nasnet, resnet_v2_152]')
         parser.add_argument('--lcd_dataset', type=str,

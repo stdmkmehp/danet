@@ -31,14 +31,14 @@ DATA_DIR = '/home/lab404/zw/datasets/oxford'
 # City Centre Dataset
 CITY_DATA_DIR = os.path.join(DATA_DIR, 'CityCentre')
 #CITY_IMGZIP_PATH = os.path.join(CITY_DATA_DIR, 'Images.zip')
-CITY_IMG_PATH = os.path.join(CITY_DATA_DIR, 'Images')
+CITY_IMG_PATH = os.path.join(CITY_DATA_DIR, 'Images_segmentation')
 CITY_GT_PATH = os.path.join(CITY_DATA_DIR, 'CityCentreGroundTruth.mat')
 CITY_IMG_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/CityCentre/Images.zip'
 CITY_GT_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/CityCentre/masks/CityCentreGroundTruth.mat'
 # New College Dataset
 COLLEGE_DATA_DIR = os.path.join(DATA_DIR, 'NewCollege')
 #COLLEGE_IMGZIP_PATH = os.path.join(COLLEGE_DATA_DIR, 'Images.zip')
-COLLEGE_IMG_PATH = os.path.join(COLLEGE_DATA_DIR, 'Images')
+COLLEGE_IMG_PATH = os.path.join(COLLEGE_DATA_DIR, 'Images_segmentation')
 COLLEGE_GT_PATH = os.path.join(COLLEGE_DATA_DIR, 'NewCollegeGroundTruth.mat')
 COLLEGE_IMG_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/NewCollege/Images.zip'
 COLLEGE_GT_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/NewCollege/masks/NewCollegeGroundTruth.mat'

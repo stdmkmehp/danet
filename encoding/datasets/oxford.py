@@ -21,7 +21,7 @@ from .base import BaseDataset
 class OxfordSegmentation(BaseDataset):
     BASE_DIR = 'oxford'
     NUM_CLASS = 19
-    def __init__(self, root='../datasets', split='citycentre',
+    def __init__(self, root='../datasets', split='city',
                  mode=None, transform=None, target_transform=None, **kwargs):
         super(OxfordSegmentation, self).__init__(
             root, split, mode, transform, target_transform, **kwargs)
@@ -29,7 +29,7 @@ class OxfordSegmentation(BaseDataset):
         root = os.path.join(root, self.BASE_DIR)
         assert os.path.exists(root), "Please download the dataset!!"
 
-        self.images = _get_oxford_image(root, split)
+        self.images, self.img_folder = _get_oxford_image(root, split)
         if len(self.images) == 0:
             raise(RuntimeError("Found 0 images in subfolders of: \
                 " + root + "\n"))
@@ -56,7 +56,7 @@ class OxfordSegmentation(BaseDataset):
         return 0
 
 
-def _get_oxford_image(folder, split='citycentre'):
+def _get_oxford_image(folder, split='city'):
     def get_image(img_folder):
         img_paths = []
         for filename in os.listdir(img_folder):
@@ -64,12 +64,12 @@ def _get_oxford_image(folder, split='citycentre'):
                 imgpath = os.path.join(img_folder, filename)
                 img_paths.append(imgpath)
         return img_paths
-    if split == 'citycentre':
+    if split == 'city':
         img_folder = os.path.join(folder, 'CityCentre/Images')
         img_paths = get_image(img_folder)
-    elif split == 'newcollege':
+    elif split == 'college':
         img_folder = os.path.join(folder, 'NewCollege/Images')
         img_paths = get_image(img_folder)
     else:
-        raise RuntimeError("Dataset split must be one of 'citycentre' and 'newcollege'.")
-    return img_paths
+        raise RuntimeError("Dataset split must be one of 'city' and 'college'.")
+    return img_paths, img_folder
