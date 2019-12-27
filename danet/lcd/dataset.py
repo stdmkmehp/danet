@@ -26,23 +26,22 @@ import sys
 from glob import glob
 
 # === DATASET VARS ===
-# Data directory
-DATA_DIR = '/home/lab404/zw/datasets/oxford'
-# City Centre Dataset
-CITY_DATA_DIR = os.path.join(DATA_DIR, 'CityCentre')
-#CITY_IMGZIP_PATH = os.path.join(CITY_DATA_DIR, 'Images.zip')
-CITY_IMG_PATH = os.path.join(CITY_DATA_DIR, 'Images_segmentation')
-CITY_GT_PATH = os.path.join(CITY_DATA_DIR, 'CityCentreGroundTruth.mat')
-CITY_IMG_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/CityCentre/Images.zip'
-CITY_GT_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/CityCentre/masks/CityCentreGroundTruth.mat'
-# New College Dataset
-COLLEGE_DATA_DIR = os.path.join(DATA_DIR, 'NewCollege')
-#COLLEGE_IMGZIP_PATH = os.path.join(COLLEGE_DATA_DIR, 'Images.zip')
-COLLEGE_IMG_PATH = os.path.join(COLLEGE_DATA_DIR, 'Images_segmentation')
-COLLEGE_GT_PATH = os.path.join(COLLEGE_DATA_DIR, 'NewCollegeGroundTruth.mat')
-COLLEGE_IMG_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/NewCollege/Images.zip'
-COLLEGE_GT_URL = 'http://www.robots.ox.ac.uk/~mobile/IJRR_2008_Dataset/Data/NewCollege/masks/NewCollegeGroundTruth.mat'
-
+LCD_IMG_PATH = {
+    'euroc'     : "/home/lab404/zw/DANet/datasets/euroc",
+    'kitti00'   : "/home/lab404/zw/DANet/datasets/kitti00",
+    'kitti05'   : "/home/lab404/zw/DANet/danet/outdir/kitti05/merge",
+    'malaga6l'  : "/home/lab404/zw/DANet/datasets/malaga6l",
+    'city'      : "/home/lab404/zw/DANet/datasets/city",
+    'college'   : "/home/lab404/zw/DANet/datasets/college"
+}
+LCD_GT_PATH = {
+    'euroc'     : "/home/lab404/zw/datasets/lcdGroundTruth/EuRoCMH05GroundTruth.mat",
+    'kitti00'   : "/home/lab404/zw/datasets/lcdGroundTruth/KITTI00GroundTruth.mat",
+    'kitti05'   : "/home/lab404/zw/datasets/lcdGroundTruth/KITTI05GroundTruth.mat",
+    'malaga6l'  : "/home/lab404/zw/datasets/lcdGroundTruth/Malaga6LGroundTruth.mat",
+    'city'      : "/home/lab404/zw/datasets/lcdGroundTruth/CityCentreGroundTruth.mat",
+    'college'   : "/home/lab404/zw/datasets/lcdGroundTruth/NewCollegeGroundTruth.mat"
+}
 
 def download_file(url, file_name):
     """Downloads a file to destination
@@ -79,68 +78,54 @@ def download_file(url, file_name):
     sys.stdout.write('\n')
     sys.stdout.flush()
 
+def get_dataset_from_path(IMG_PATH, GT_PATH, img_suffix, assetlen, debug):
+    debug_amt = 25
+    print('Loading the dataset from {}...'.format(IMG_PATH))
+    # Load images
+    print('Loading images')
+    '''
+    if not os.path.isfile(CITY_IMGZIP_PATH):
+        download_file(CITY_IMG_URL, CITY_IMGZIP_PATH)
+    if not os.path.isdir(CITY_IMG_PATH):
+        # Unzip archive
+        print('Unzipping {} to {}'.format(CITY_IMGZIP_PATH, CITY_DATA_DIR))
+        with zipfile.ZipFile(CITY_IMGZIP_PATH, 'r') as zip_handle:
+            zip_handle.extractall(CITY_DATA_DIR)
+    '''
+    # Sort by image number
+    img_names = sorted(glob(os.path.join(IMG_PATH, img_suffix)))
+    assert len(img_names) == assetlen
+    if debug:
+        print('Using fewer images ({}) per debug flag...'.format(
+            debug_amt))
+        img_names = img_names[:debug_amt]
+    imgs = np.asarray([imread(img, mode='RGB') for img in img_names])
+    # Load GT
+    if not os.path.isfile(GT_PATH):
+        # download_file(CITY_GT_URL, CITY_GT_PATH)
+        raise RuntimeError('No ground truth!')
+    print('Loading ground truth from {}...'.format(GT_PATH))
+    gt = loadmat(GT_PATH)['truth']
+    if debug:
+        gt = gt[:debug_amt, :debug_amt]
+    return imgs, gt
 
 def get_dataset(name, debug=False):
     debug_amt = 25
-    if name.lower() == 'city':  # city centre dataset
-        print('Loading the City Centre dataset...')
-        # Load images
-        print('Loading images')
-        '''
-        if not os.path.isfile(CITY_IMGZIP_PATH):
-            download_file(CITY_IMG_URL, CITY_IMGZIP_PATH)
-        if not os.path.isdir(CITY_IMG_PATH):
-            # Unzip archive
-            print('Unzipping {} to {}'.format(CITY_IMGZIP_PATH, CITY_DATA_DIR))
-            with zipfile.ZipFile(CITY_IMGZIP_PATH, 'r') as zip_handle:
-                zip_handle.extractall(CITY_DATA_DIR)
-        '''
-        # Sort by image number
-        img_names = sorted(glob(os.path.join(CITY_IMG_PATH, '*.jpg')))
-        assert len(img_names) == 2474
-        if debug:
-            print('Using fewer images ({}) per debug flag...'.format(
-                debug_amt))
-            img_names = img_names[:debug_amt]
-        imgs = np.asarray([imread(img) for img in img_names])
-        # Load GT
-        if not os.path.isfile(CITY_GT_PATH):
-            download_file(CITY_GT_URL, CITY_GT_PATH)
-        print('Loading ground truth')
-        gt = loadmat(CITY_GT_PATH)['truth']
-        if debug:
-            gt = gt[:debug_amt, :debug_amt]
+    if name.lower() == 'euroc':
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.png', 2273, debug)
+    elif name.lower() == 'kitti00':
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.png', 4541, debug)
+    elif name.lower() == 'kitti05':
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.png', 2761, debug)
+    elif name.lower() == 'malaga6l':
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.jpg', 3474, debug)
+    elif name.lower() == 'city':  # city centre dataset
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.jpg', 2474, debug)
     elif name.lower() == 'college':  # new college dataset
-        print('Loading the New College dataset...')
-        # Load images
-        print('Loading images')
-        '''
-        if not os.path.isfile(COLLEGE_IMGZIP_PATH):
-            download_file(COLLEGE_IMG_URL, COLLEGE_IMGZIP_PATH)
-        if not os.path.isdir(COLLEGE_IMG_PATH):
-            # Unzip archive
-            print('Unzipping {} to {}'.format(COLLEGE_IMGZIP_PATH,
-                                              COLLEGE_DATA_DIR))
-            with zipfile.ZipFile(COLLEGE_IMGZIP_PATH, 'r') as zip_handle:
-                zip_handle.extractall(COLLEGE_DATA_DIR)
-        '''
-        # Sort by image number
-        img_names = sorted(glob(os.path.join(COLLEGE_IMG_PATH, '*.jpg')))
-        assert len(img_names) == 2146
-        if debug:
-            print('Using fewer images ({}) per debug flag...'.format(
-                debug_amt))
-            img_names = img_names[:debug_amt]
-        imgs = np.asarray([imread(img) for img in img_names])
-        # Load GT
-        if not os.path.isfile(COLLEGE_GT_PATH):
-            download_file(COLLEGE_GT_URL, COLLEGE_GT_PATH)
-        print('Loading ground truth')
-        gt = loadmat(COLLEGE_GT_PATH)['truth']
-        if debug:
-            gt = gt[:debug_amt, :debug_amt]
+        return get_dataset_from_path(LCD_IMG_PATH[name.lower()], LCD_GT_PATH[name.lower()],'*.jpg', 2146, debug)
     elif name.lower() == 'tsukuba':  # new tsukuba dataset
         raise NotImplementedError
     else:
-        raise ValueError('Invalid dataset name: {}.'.format(name))
+        raise ValueError('lcd_dataset must be one of {}.'.format(LCD_IMG_PATH.keys()))
     return imgs, gt

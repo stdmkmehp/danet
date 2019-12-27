@@ -171,7 +171,7 @@ def median_filter(sim, gt, k_size=None):
         # Compute baseline AP (no median filtering)
         best_ap = average_precision_score(gt[tri_idx], sim[tri_idx])
         best_sim = sim
-        k_sizes = list(range(1, 61, 2))
+        k_sizes = list(range(7, 21, 2)) #k_sizes = list(range(1, 61, 2))
         # Compute similarity matrix
         for ks in k_sizes:
             sim_filtered = medfilt(sim, kernel_size=ks)
@@ -361,7 +361,7 @@ def compute_and_plot_scores(sim, gt, model_name):
 def lcd_eval(args):
     print("\nMake sure that the following is set up properly: \
             \n\tCKPT_DIR in cnn_models.py \
-            \n\tDATA_DIR CITY_IMG_PATH COLLEGE_IMG_PATH in dataset.py.\n")
+            \n\tLCD_IMG_PATH and LCD_GT_PATH in dataset.py.\n")
     model_name = args.lcd_model
 
     # Check specified model
@@ -418,7 +418,7 @@ if __name__ == '__main__':
     parser.add_argument('--lcd_dataset', type=str,
                         help='Either "city" or "college".', default='city')
     parser.add_argument('--overfeat', type=int,
-                        help='0 for small network, 1 for large', default=1)
+                        help='0 for small network, 1 for large', default=0)
     parser.add_argument('--weights_dir', type=str, default='OverFeat/data/default',
                         help='Weights directory.')
     parser.add_argument('--weights_base', type=str, default='net_weight_{}',

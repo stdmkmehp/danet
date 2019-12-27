@@ -1,0 +1,31 @@
+CUDA_VISIBLE_DEVICES=0,1 python test.py --dataset cityscapes --model danet --resume-dir cityscapes/model --workers 1 --backbone resnet101 --multi-grid --multi-dilation 4 8 16 --base-size 2048 --crop-size 768 --lcd_model inception_v1 --lcd_dataset city --lcd
+
+!!!注意: 运行结果保存在DANet/danet/outdir/working目录下，及时取出结果，以免结果覆盖！
+
+运行参数说明：
+--lcd
+	指明运行lcd数据集
+
+--lcd_dataset
+	指定数据集名称(详见DANet/danet/lcd/dataset.py)
+
+--base-size 2048 --crop-size 768
+	图像basesize&cropsize
+参数组合包括
+# cityscapes		-base-size 2048 --crop-size 768
+# oxford:640*480	--base-size 640 --crop-size 384 --lcd_dataset city
+# oxford:640*480	--base-size 640 --crop-size 384 --lcd_dataset college
+# euroc:752*380		--base-size 752 --crop-size 384 --lcd_dataset euroc
+# kitti00:1241*376	--base-size 1241 --crop-size 480 --lcd_dataset kitti00
+# kitti05:1226*370	--base-size 1226 --crop-size 480 --lcd_dataset kitti05
+# malaga6l:1024*768	--base-size 1024 --crop-size 600 --lcd_dataset malaga6l
+
+--workers 1
+	读取dataset开启的线程数目(vscode debug调试时应当设为0)
+
+--dataset cityscapes --model danet --resume-dir cityscapes/model --backbone resnet101 --multi-grid --multi-dilation 4 8 16
+	常用模型参数 不建议修改
+
+已弃用参数:
+	--lcd_model inception_v1  仅在运行cnn_lcd.py时生效
+

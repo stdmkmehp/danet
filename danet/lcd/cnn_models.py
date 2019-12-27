@@ -67,7 +67,7 @@ INCEPTION_V4_CKPT = os.path.join(CKPT_DIR, 'inception_v4.ckpt')
 # NASNet
 NASNET_URL = 'https://storage.googleapis.com/download.tensorflow.org/models/nasnet-a_large_04_10_2017.tar.gz'
 NASNET_PATH = os.path.join(CKPT_DIR, 'nasnet-a_large_04_10_2017.tar.gz')
-NASNET_CKPT = os.path.join(CKPT_DIR, 'model.ckpt')
+NASNET_CKPT = os.path.join(CKPT_DIR, 'model.ckpt.data-00000-of-00001')
 NASNET_CKPT_FULL = os.path.join(CKPT_DIR, 'model.ckpt.data-00000-of-00001')
 # ResNet V2 152
 RESNET_V2_152_URL = 'http://download.tensorflow.org/models/resnet_v2_152_2017_04_14.tar.gz'

@@ -37,7 +37,7 @@ def test(args):
         transform.Normalize([.485, .456, .406], [.229, .224, .225])])
     # dataset
     if args.lcd:
-        testset = get_segmentation_dataset('oxford', split=args.lcd_dataset, mode='vis',
+        testset = get_segmentation_dataset('lcddatasets', split=args.lcd_dataset, mode='vis',
                                            transform=input_transform)
     elif args.eval:
         testset = get_segmentation_dataset(args.dataset, split='val', mode='testval',
@@ -66,7 +66,7 @@ def test(args):
         # strict=False, so that it is compatible with old pytorch saved models
         model.load_state_dict(checkpoint['state_dict'], strict=False)
 
-    print(model)
+    # print(model)
     num_class = testset.num_class
     evaluator = MultiEvalModule(model, testset.num_class, multi_scales=args.multi_scales).cuda()
     evaluator.eval()
@@ -100,8 +100,8 @@ def test(args):
                 mask.save(os.path.join(outdir, outname))
                 if args.lcd:
                     imgMerge, imgGray = lcdutils.get_mask_pure(predict, os.path.join(testset.img_folder, impath), 'cityscapes')
-                    imgMerge.save(os.path.join('/home/lab404/zw/datasets/segmentation/working/merge', outname))
-                    imgGray.save(os.path.join('/home/lab404/zw/datasets/segmentation/working/gray', outname))
+                    imgMerge.save(os.path.join('/home/lab404/zw/DANet/danet/outdir/working/merge', outname))
+                    imgGray.save(os.path.join('/home/lab404/zw/DANet/danet/outdir/working/gray', outname))
             # dummy outputs for compatible with eval mode
             return 0, 0, 0, 0
 

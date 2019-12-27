@@ -12,7 +12,7 @@ class Options():
     def __init__(self):
         parser = argparse.ArgumentParser(description='PyTorch \
             Segmentation')
-        parser.add_argument('--outdir', type=str, default='danet_vis',
+        parser.add_argument('--outdir', type=str, default='/home/lab404/zw/DANet/danet/outdir/working/color',
                             help='outdir to save images')
         # model and dataset 
         parser.add_argument('--model', type=str, default='encnet',

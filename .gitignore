@@ -16,6 +16,9 @@ encoding/lib/*pu/*.egg-info/
 encoding/lib/*pu/dist/
 experiments/segmentation/outdir/
 #.vscode/
+danet/outdir/
+danet/lcd/*.png
+danet/lcd/output*
 danet/danet_vis*/
 danet/cityscapes/danet_vis/
 danet/cityscapes/model/*

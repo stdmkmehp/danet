@@ -18,8 +18,8 @@
                 "--dataset","cityscapes",
                 "--model","danet",
                 "--resume-dir","cityscapes/model",
-                "--base-size","2048",
-                "--crop-size","768",
+                "--base-size","752",
+                "--crop-size","384",
                 "--workers","0",
                 "--backbone","resnet101",
                 "--multi-grid",
@@ -27,7 +27,7 @@
                 // "--eval"
                 "--lcd",
                 "--lcd_model","inception_v1",
-                "--lcd_dataset","city",
+                "--lcd_dataset","euroc",
                 "--overfeat","0"
             ]
         }

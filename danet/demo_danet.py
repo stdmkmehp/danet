@@ -45,6 +45,6 @@ predict = torch.max(output, 1)[1].cpu().numpy() + datasetoffset
 mask = encoding.utils.get_mask_pallete(predict, 'cityscapes')
 mask.save('/home/lab404/zw/DANet/img/output_danet.png')
 
-imgMotion, imgAll = lcdutils.get_mask_pure(predict, filename, 'cityscapes')
-imgMotion.save('/home/lab404/zw/DANet/img/output_motion.png')
-imgAll.save('/home/lab404/zw/DANet/img/output_all.png')
+imgMerge, imgGray = lcdutils.get_mask_pure(predict, filename, 'cityscapes')
+imgMerge.save('/home/lab404/zw/DANet/img/output_merge.png')
+imgGray.save('/home/lab404/zw/DANet/img/output_gray.png')

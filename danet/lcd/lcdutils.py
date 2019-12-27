@@ -22,7 +22,7 @@ def get_mask_pure(npmask, imgpath, dataset='cityscapes'):
     if dataset != 'cityscapes':
         raise RuntimeError("Wrong in get_mask_pure(). dataset mnust be cityscapes!")
     # put colormap
-    img = Image.open(imgpath)
+    img = Image.open(imgpath).convert('RGB')
     imgdata = img.load()
     width, height = img.size
     _, rows, cols = npmask.shape
